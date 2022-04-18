@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="shortcut icon" href="#" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="./index.css" />
+    <title>Whack IT!</title>
+
+    <nav class="nav">
+      <div class="container">
+        <div class="logo">
+          <a href="#">Whack-A-Shrek</a>
+        </div>
+        <div id="mainListDiv" class="main_list">
+          <ul class="navlinks">
+            <li><a style="font-size: 20px" href="https://www.linkedin.com/in/robin-singh-2b26b41b1/">About me</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Jquery needed -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="./scroll-effect.js"></script>
+  </head>
+
+  <body>
+    
+    <div class="child1">
+        <label for="nme"> <span> <h1> Name? </h1> </span> </label>
+    <div id="nameofplayer">
+        <input type="text" name="name" class="question" id="nme" required autocomplete="off" />
+        
+    </div> 
+    
+    </div>
+    
+
+
+    <div class="child2"> 
+
+    <div class="container">
+        
+      <div class="heading">
+        <h3 align="left">1! 2! 3! Whack!!!</h3>
+      </div>
+
+
+   
+     
+   
+    <span>
+        
+      <div class="score">
+        Points: <span>0</span>
+        <h2 id="time-left">30</h2>
+      </div>
+
+      <div class="holesCont" >
+        <div class="hole hole1"></div><div class="hole hole2"></div><div class="hole hole3"></div><div class="hole hole4"></div><div class="hole hole5"></div><div class="hole hole6"></div><div class="hole hole7"></div><div class="hole hole8"></div><div class="hole hole9"></div><div class="hole hole10"></div><div class="hole hole11"></div><div class="hole hole12"></div><div class="hole hole13"></div><div class="hole hole14"></div>
+        <div class="hole hole15"></div><div class="hole hole16"></div><div class="hole hole17"></div><div class="hole hole18"></div><div class="hole hole19"></div><div class="hole hole20"></div><div class="hole hole21"></div><div class="hole hole22"></div><div class="hole hole23"></div><div class="hole hole24"></div><div class="hole hole25"></div>
+      </div>
+    </span>
+      <div class="buttons">
+        <button class="play">PLAY</button>
+        <button class="stop" id="butto">STOP DA SHREK</button>
+      </div>
+      <div>
+
+        <footer id="site-footer"> <h5> Made with &hearts; by Robin </h5>  </footer>
+        </div> 
+
+      <div class="cursor">
+        <img src="./images/hammer.png" />
+      </div>
+    
+    </div>
+</div>
+
+
+
+</body>
+
+
+
+
+
+
+
+
+
+
+  <script>
+
+    //Audio function
+    function myPlay() {
+      var audio = new Audio("./Audio/audio.mp3");
+      audio.play();
+    }
+
+    const score = document.querySelector(".score span");
+    const holes = document.querySelectorAll(".hole");
+    const playBtn = document.querySelector(".buttons .play");
+    const stopBtn = document.querySelector(".buttons .stop");
+    const cursor = document.querySelector(".cursor img");
+    const timeLeft = document.querySelector("#time-left");
+
+    let timerId = null;
+    let result = 0;
+
+    window.addEventListener("mousemove", (e) => {
+      cursor.style.top = e.pageY + "px";
+      cursor.style.left = e.pageX + "px";
+    });
+
+    window.addEventListener("click", () => {
+      cursor.style.animation = "hit 0.1s ease";
+      setTimeout(() => {
+        cursor.style.removeProperty("animation");
+      }, 100);
+    });
+
+    //Play Button click
+    playBtn.addEventListener("click", () => {
+      let currentTime = 30;
+
+      console.log(document.getElementById("nameofplayer").innerText);
+      if (!document.getElementById("nameofplayer").innerText) {
+        if (!document.getElementById("nme").value) {
+          alert("Click on name to enter your name!!");
+
+          return;
+        }
+        var name = document.getElementById("nme").value;
+
+        document.getElementById("nameofplayer").innerHTML =
+          "<h2>" + name + "</h2>";
+      }
+
+      // Timer Countdown
+      function countDown() {
+        currentTime--;
+        timeLeft.textContent = currentTime;
+
+        if (currentTime == 0) {
+          document.getElementById("butto").click();
+          clearInterval(countDownTimerId);
+          clearInterval(timerId);
+          
+        }
+      }
+
+      let countDownTimerId = setInterval(countDown, 1000);
+
+      playBtn.style.display = "none";
+      stopBtn.style.display = "inline-block";
+
+      let hole;
+      let points = 0;
+
+      /////// DIFFICULTY LOGIC //////////////
+
+      localStorage.setItem("difficulty", difficulty);
+
+      var difficulty = localStorage.getItem("difficulty") || 650;
+
+      if (score.innerHTML > 15) {
+        difficulty = 300;
+        console.log(difficulty);
+      } else if (score.innerHTML < 15 && score.innerHTML > 5) {
+        difficulty = 500;
+        console.log(difficulty);
+      } else {
+        difficulty = 650;
+        console.log(difficulty);
+      }
+
+    // Shrek movement logic
+
+      console.log("Play!!!");
+
+      const startGame = setInterval(() => {
+        let arrayNo = Math.floor(Math.random() * 25);
+        hole = holes[arrayNo];
+
+        let image = document.createElement("img");
+        image.setAttribute("src", "./images/mole3.png");
+        image.setAttribute("class", "mole");
+
+        hole.appendChild(image);
+
+        setTimeout(() => {
+          hole.removeChild(image);
+        }, difficulty);
+      }, 700);
+
+      window.addEventListener("click", (e) => {
+        if (e.target === hole) {
+          score.textContent = ++points;
+          myPlay();
+        }
+      });
+
+      stopBtn.addEventListener("click", () => {
+        clearInterval(startGame);
+
+        stopBtn.style.display = "none";
+        playBtn.style.display = "inline-block";
+      });
+    });
+  </script>
+</html>
