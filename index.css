@@ -87,6 +87,7 @@ html,* {
     padding-bottom: 100px;
     -webkit-transition: all 0.4s ease;
     transition: all 0.4s ease;
+    background-color: #111;
 }
 
 
@@ -488,8 +489,6 @@ input.question:invalid ~ input[type="submit"], textarea.question:invalid ~ input
 /* WORK */
 
 
-
-
 body {
     background-color: #6a044a;
     color: #fff;
@@ -499,8 +498,8 @@ body {
 }
 
 .heading {
-    font-size: 2em;
-    margin: 5em 0;
+    font-size: 1em;
+    margin: 7em 0;
     text-align: center;
 }
 
